@@ -3,554 +3,420 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Analytics Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <title>Customer Support System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
-            padding-top: 20px;
-            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
         }
-        .card {
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
-        .card-header {
-            background-color: #343a40;
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563eb;
+            margin-right: 24px;
+            letter-spacing: 1px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin-right: 24px;
+        }
+        
+        .nav-links li:last-child {
+            margin-right: 0;
+        }
+        
+        .nav-links a {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+        
+        .nav-links a.active {
+            color: #2563eb;
+            font-weight: 600;
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-right: 16px;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #2563eb;
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
+            margin-right: 8px;
         }
-        .nav-tabs .nav-link.active {
-            font-weight: bold;
-            background-color: #fff;
-            border-bottom-color: #fff;
-        }
-        .flagged-customer {
+        
+        .logout-button {
+            padding: 6px 12px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            font-size: 14px;
+            text-decoration: none;
         }
-        .flagged-customer:hover {
-            background-color: #f8f9fa;
+        
+        .logout-button:hover {
+            background-color: #dc2626;
         }
-        .alert-warning {
-            background-color: #fff3cd;
-            border-color: #ffecb5;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
         }
-        .btn-ban {
-            background-color: #dc3545;
+        
+        header {
+            margin-bottom: 24px;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            font-size: 16px;
+            margin-top: 0;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .card-header h2 {
+            font-size: 18px;
+            margin: 0 0 4px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-header p {
+            color: #6b7280;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .icon {
+            margin-right: 8px;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .input-group {
+            display: flex;
+        }
+        
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .primary {
+            background-color: #2563eb;
             color: white;
         }
-        .banned {
-            background-color: #f8d7da !important;
-            color: #721c24;
+        
+        .primary:hover {
+            background-color: #1d4ed8;
         }
-        #productChart {
-            height: 300px;
-            margin-top: 15px;
+        
+        .full-width {
+            width: 100%;
         }
-        .badge-returns {
-            background-color: #dc3545;
-            color: white;
+        
+        .support-options-container {
+            margin-top: 20px;
+        }
+        
+        .support-options-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .support-options-list li {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+        }
+        
+        .support-options-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .check-icon {
+            color: #10b981;
+            margin-right: 8px;
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #d32f2f;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center mb-4">Business Analytics Dashboard</h1>
-        
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="returns-tab" data-bs-toggle="tab" data-bs-target="#returns" type="button" role="tab">Flagged Customers</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="sales-tab" data-bs-toggle="tab" data-bs-target="#sales" type="button" role="tab">Product Sales Analysis</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button" role="tab">Product Recommendations</button>
-            </li>
-        </ul>
-        
-        <div class="tab-content" id="myTabContent">
-            <!-- Flagged Customers Tab -->
-            <div class="tab-pane fade show active" id="returns" role="tabpanel">
-                <div class="card mt-3">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Customers with Excessive Returns</span>
-                        <div>
-                            <label for="minReturns" class="me-2">Min. Returns:</label>
-                            <input type="number" id="minReturns" class="form-control-sm" value="5" min="1" style="width: 60px;">
-                            <button id="refreshFlagged" class="btn btn-sm btn-primary ms-2">Refresh</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Customer ID</th>
-                                        <th>Return Invoices</th>
-                                        <th>Items Returned</th>
-                                        <th>Last Return Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="flaggedCustomersTable">
-                                    <tr>
-                                        <td colspan="5" class="text-center">Loading data...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card mt-3 d-none" id="customerDetailCard">
-                    <div class="card-header">
-                        Customer Detail: <span id="customerDetailId"></span>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-warning">
-                            <strong>Warning:</strong> This customer has a high number of returns. Consider reviewing their purchase history.
-                        </div>
-                        <h5>Purchase History</h5>
-                        <div class="table-responsive">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Purchase Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="customerProductsTable">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+    <div class="navbar">
+        <div class="logo">
+            <div class="logo-text">KPMD</div>
+            <ul class="nav-links">
+                <li><a href="/dashboard" class="active">Dashboard</a></li>
+                <li><a href="#">Customers</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+        <div class="user-section">
+            <div class="user-info">
+                <div class="user-avatar">{{ username[0].upper() }}</div>
+                <span>{{ username }}</span>
             </div>
-            
-            <!-- Product Sales Analysis Tab -->
-            <div class="tab-pane fade" id="sales" role="tabpanel">
-                <div class="card mt-3">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Top Selling Products by Month</span>
-                        <div class="d-flex align-items-center">
-                            <select id="yearSelect" class="form-select form-select-sm me-2" style="width: 100px;">
-                            </select>
-                            <select id="monthSelect" class="form-select form-select-sm me-2" style="width: 120px;">
-                            </select>
-                            <button id="loadProducts" class="btn btn-sm btn-primary">Load</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="productChart"></div>
-                        <div class="table-responsive mt-3">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Rank</th>
-                                        <th>Stock Code</th>
-                                        <th>Product Description</th>
-                                        <th>Quantity Sold</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="topProductsTable">
-                                    <tr>
-                                        <td colspan="4" class="text-center">Select a month and year to view data</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product Recommendations Tab -->
-            <div class="tab-pane fade" id="recommendations" role="tabpanel">
-                <div class="card mt-3">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Product Combination Recommendations</span>
-                        <div>
-                            <button id="generateRecommendations" class="btn btn-sm btn-primary">Generate Recommendations</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <p>These recommendations show products that are frequently purchased together. Use these insights for product placements, bundles, and targeted marketing.</p>
-                        </div>
-                        <div class="accordion" id="recommendationsAccordion">
-                            <div class="text-center py-4" id="recommendationsLoading">
-                                Click "Generate Recommendations" to analyze product combinations
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <a href="/logout" class="logout-button">Logout</a>
         </div>
     </div>
-
-    <!-- Modal for Banning Customer -->
-    <div class="modal fade" id="banCustomerModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Ban Customer</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to ban customer <strong id="banCustomerId"></strong>?</p>
-                    <p>This will prevent the customer from making further purchases.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmBan">Ban Customer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.0/apexcharts.min.js"></script>
     
+    <div class="container">
+        <header>
+            <h1>Customer Support Dashboard</h1>
+            <p class="subtitle">Manage customer inquiries and support requests</p>
+        </header>
+
+        <div class="card-grid">
+            <!-- Customer Information Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><span class="icon">🔍</span> Customer Lookup</h2>
+                    <p>Enter customer ID to view purchase history</p>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label for="customer_id">Customer ID</label>
+                        <div class="input-group">
+                            <input type="number" id="customer_id" placeholder="Enter ID number">
+                            <button onclick="fetchProducts()" class="btn primary">Search</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sort_by">Sort By</label>
+                            <select id="sort_by">
+                                <option value="date">Date</option>
+                                <option value="name">Name</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="order">Order</label>
+                            <select id="order">
+                                <option value="desc">Descending</option>
+                                <option value="asc">Ascending</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="error-message" class="error-message hidden"></div>
+                </div>
+            </div>
+
+            <!-- Support Options Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><span class="icon">📦</span> Support Request</h2>
+                    <p>Select product and issue type</p>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label for="product_list">Purchased Products</label>
+                        <select id="product_list">
+                            <option value="" disabled selected>No products found</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issue_type">Issue Type</label>
+                        <select id="issue_type">
+                            <option value="DAMAGED ITEM">Damaged Item</option>
+                            <option value="MISSING PARTS">Missing Parts</option>
+                            <option value="WRONG ITEM SENT">Wrong Item Sent</option>
+                            <option value="GENERAL QUERY">General Query</option>
+                        </select>
+                    </div>
+
+                    <button onclick="fetchSupportOptions()" class="btn primary full-width">Get Support Options</button>
+
+                    <div class="support-options-container">
+                        <h3>Support Options:</h3>
+                        <ul id="support_options" class="support-options-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Store banned customers
-        const bannedCustomers = new Set();
-        let chart = null;
-        
-        // Load flagged customers on page load
-        $(document).ready(function() {
-            loadFlaggedCustomers();
-            loadTimePeriods();
+        function fetchProducts() {
+            let customer_id = $("#customer_id").val();
+            let sort_by = $("#sort_by").val();
+            let order = $("#order").val();
             
-            // Tab change event
-            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-                if (e.target.id === 'sales-tab' && chart) {
-                    chart.render();
-                }
-            });
+            // Show loading state
+            $("#product_list").html('<option value="" disabled selected>Loading...</option>');
+            $("#error-message").addClass("hidden");
             
-            // Event handlers
-            $('#refreshFlagged').click(loadFlaggedCustomers);
-            $('#loadProducts').click(loadTopProducts);
-            $('#generateRecommendations').click(loadRecommendations);
-            
-            // Handle ban customer confirmation
-            $('#confirmBan').click(function() {
-                const customerId = $('#banCustomerId').text();
-                bannedCustomers.add(parseInt(customerId));
-                $('#banCustomerModal').modal('hide');
-                
-                // Update UI to show customer is banned
-                $(`.flagged-customer[data-id="${customerId}"]`).addClass('banned');
-                $(`.ban-button[data-id="${customerId}"]`).text('Banned').prop('disabled', true);
-            });
-        });
-        
-        // Load flagged customers with excessive returns
-        function loadFlaggedCustomers() {
-            const minReturns = $('#minReturns').val();
-            
-            fetch('/get_flagged_customers', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ min_returns: minReturns }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.length === 0) {
-                    $('#flaggedCustomersTable').html('<tr><td colspan="5" class="text-center">No customers found with excessive returns</td></tr>');
-                    return;
-                }
-                
-                let html = '';
-                data.forEach(customer => {
-                    const isBanned = bannedCustomers.has(customer.CustomerID);
-                    html += `
-                        <tr class="flagged-customer ${isBanned ? 'banned' : ''}" data-id="${customer.CustomerID}">
-                            <td>${customer.CustomerID}</td>
-                            <td><span class="badge bg-danger">${customer.ReturnInvoices}</span></td>
-                            <td>${customer.ItemsReturned}</td>
-                            <td>${new Date(customer.LastReturnDate).toLocaleDateString()}</td>
-                            <td>
-                                <button class="btn btn-sm btn-info view-customer" data-id="${customer.CustomerID}">View Details</button>
-                                <button class="btn btn-sm btn-ban ban-button" data-id="${customer.CustomerID}" ${isBanned ? 'disabled' : ''}>${isBanned ? 'Banned' : 'Ban Customer'}</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                $('#flaggedCustomersTable').html(html);
-                
-                // Add event handlers for buttons
-                $('.view-customer').click(function() {
-                    const customerId = $(this).data('id');
-                    showCustomerDetails(customerId);
-                });
-                
-                $('.ban-button').click(function() {
-                    const customerId = $(this).data('id');
-                    $('#banCustomerId').text(customerId);
-                    $('#banCustomerModal').modal('show');
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                $('#flaggedCustomersTable').html('<tr><td colspan="5" class="text-center text-danger">Error loading data</td></tr>');
-            });
-        }
-        
-        // Show customer details
-        function showCustomerDetails(customerId) {
-            $('#customerDetailId').text(customerId);
-            $('#customerDetailCard').removeClass('d-none');
-            
-            fetch('/get_products', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    customer_id: customerId,
-                    sort_by: "date",
-                    order: "desc"
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    $('#customerProductsTable').html('<tr><td colspan="2" class="text-center">No products found</td></tr>');
-                    return;
-                }
-                
-                let html = '';
-                data.forEach(product => {
-                    html += `
-                        <tr>
-                            <td>${product.Description}</td>
-                            <td>${new Date(product.InvoiceDate).toLocaleDateString()}</td>
-                        </tr>
-                    `;
-                });
-                
-                $('#customerProductsTable').html(html);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                $('#customerProductsTable').html('<tr><td colspan="2" class="text-center text-danger">Error loading products</td></tr>');
-            });
-        }
-        
-        // Load available time periods
-        function loadTimePeriods() {
-            fetch('/get_time_periods')
-            .then(response => response.json())
-            .then(data => {
-                // Populate year select
-                const years = [...new Set(data.map(p => p.year))];
-                let yearOptions = '';
-                years.forEach(year => {
-                    yearOptions += `<option value="${year}">${year}</option>`;
-                });
-                $('#yearSelect').html(yearOptions);
-                
-                // Populate month select
-                updateMonthSelect(data, years[0]);
-                
-                // Add event listener for year change
-                $('#yearSelect').change(function() {
-                    updateMonthSelect(data, parseInt($(this).val()));
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-        
-        // Update month select based on selected year
-        function updateMonthSelect(timeData, selectedYear) {
-            const months = timeData.filter(p => p.year === selectedYear);
-            let monthOptions = '';
-            months.forEach(month => {
-                monthOptions += `<option value="${month.month}">${month.month_name}</option>`;
-            });
-            $('#monthSelect').html(monthOptions);
-        }
-        
-        // Load top products for selected month/year
-        function loadTopProducts() {
-            const year = $('#yearSelect').val();
-            const month = $('#monthSelect').val();
-            
-            fetch('/get_top_products', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    year: year,
-                    month: month,
-                    top_n: 10
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.length === 0) {
-                    $('#topProductsTable').html('<tr><td colspan="4" class="text-center">No sales data found for this period</td></tr>');
-                    if (chart) {
-                        chart.updateOptions({
-                            series: [{
-                                name: 'Quantity Sold',
-                                data: []
-                            }],
-                            xaxis: {
-                                categories: []
-                            }
+            $.ajax({
+                url: "/get_products",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({customer_id, sort_by, order}),
+                success: function(response) {
+                    if (response.error) {
+                        $("#error-message").text(response.error).removeClass("hidden");
+                        $("#product_list").html('<option value="" disabled selected>No products found</option>');
+                        return;
+                    }
+                    
+                    $("#product_list").empty();
+                    if (response.length === 0) {
+                        $("#product_list").html('<option value="" disabled selected>No products found</option>');
+                    } else {
+                        response.forEach(product => {
+                            const date = new Date(product.InvoiceDate).toLocaleDateString();
+                            $("#product_list").append(`<option value="${product.Description}">${product.Description} (${date})</option>`);
                         });
                     }
-                    return;
+                },
+                error: function() {
+                    $("#error-message").text("Failed to fetch products. Please try again.").removeClass("hidden");
+                    $("#product_list").html('<option value="" disabled selected>Error loading products</option>');
                 }
-                
-                let html = '';
-                const chartData = [];
-                const categories = [];
-                
-                data.forEach((product, index) => {
-                    html += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${product.StockCode}</td>
-                            <td>${product.Description}</td>
-                            <td>${product.Quantity}</td>
-                        </tr>
-                    `;
-                    
-                    // Prepare chart data (limit to top 5 for better visualization)
-                    if (index < 5) {
-                        chartData.push(product.Quantity);
-                        categories.push(product.Description.length > 20 ? 
-                                        product.Description.substring(0, 20) + '...' : 
-                                        product.Description);
-                    }
-                });
-                
-                $('#topProductsTable').html(html);
-                
-                // Initialize or update chart
-                if (chart) {
-                    chart.updateOptions({
-                        series: [{
-                            name: 'Quantity Sold',
-                            data: chartData
-                        }],
-                        xaxis: {
-                            categories: categories
-                        }
-                    });
-                } else {
-                    const options = {
-                        series: [{
-                            name: 'Quantity Sold',
-                            data: chartData
-                        }],
-                        chart: {
-                            type: 'bar',
-                            height: 300
-                        },
-                        plotOptions: {
-                            bar: {
-                                horizontal: false,
-                                columnWidth: '55%',
-                                endingShape: 'rounded'
-                            },
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        xaxis: {
-                            categories: categories,
-                            labels: {
-                                style: {
-                                    fontSize: '12px'
-                                }
-                            }
-                        },
-                        title: {
-                            text: `Top Selling Products - ${$('#monthSelect option:selected').text()} ${year}`,
-                            align: 'center'
-                        },
-                        fill: {
-                            colors: ['#4e73df']
-                        }
-                    };
-                    
-                    chart = new ApexCharts(document.querySelector("#productChart"), options);
-                    chart.render();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                $('#topProductsTable').html('<tr><td colspan="4" class="text-center text-danger">Error loading data</td></tr>');
             });
         }
-        
-        // Load product recommendations
-        function loadRecommendations() {
-            $('#recommendationsLoading').html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>');
+
+        function fetchSupportOptions() {
+            let issue = $("#issue_type").val();
             
-            fetch('/get_product_recommendations', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+            // Show loading state
+            $("#support_options").html('<li class="loading">Loading options...</li>');
+            
+            $.ajax({
+                url: "/get_support_options",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({issue}),
+                success: function(response) {
+                    $("#support_options").empty();
+                    response.forEach(option => {
+                        $("#support_options").append(`<li><span class="check-icon">✓</span> ${option}</li>`);
+                    });
                 },
-                body: JSON.stringify({ 
-                    min_support: 0.01,
-                    min_confidence: 0.3
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.length === 0) {
-                    $('#recommendationsAccordion').html('<div class="alert alert-info">No strong product associations found in the data.</div>');
-                    return;
+                error: function() {
+                    $("#support_options").html('<li class="error">Failed to load support options</li>');
                 }
-                
-                let html = '';
-                data.forEach((rec, index) => {
-                    const ifProducts = rec.if_purchased.join(', ');
-                    const thenProducts = rec.recommend.join(', ');
-                    
-                    html += `
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading${index}">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
-                                    <strong>If customers buy:</strong> ${ifProducts}
-                                </button>
-                            </h2>
-                            <div id="collapse${index}" class="accordion-collapse collapse" data-bs-parent="#recommendationsAccordion">
-                                <div class="accordion-body">
-                                    <p><strong>Then they often buy:</strong> ${thenProducts}</p>
-                                    <p><strong>Confidence:</strong> ${rec.confidence}% <small class="text-muted">(likelihood of recommendation being followed)</small></p>
-                                    <p><strong>Lift:</strong> ${rec.lift} <small class="text-muted">(strength of association, values > 1 indicate strong correlation)</small></p>
-                                    <div class="mt-3">
-                                        <h6>Recommendation:</h6>
-                                        <p>Consider bundling these products or creating a "Frequently Bought Together" section for these items.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                $('#recommendationsAccordion').html(html);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                $('#recommendationsAccordion').html('<div class="alert alert-danger">Error generating recommendations. Please try again.</div>');
-            })
-            .finally(() => {
-                $('#recommendationsLoading').html('');
             });
         }
     </script>
